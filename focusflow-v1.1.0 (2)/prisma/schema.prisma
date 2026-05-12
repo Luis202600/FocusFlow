@@ -1,0 +1,144 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  passwordHash  String
+  name          String
+  avatar        String?
+  createdAt     String   @default("")
+  updatedAt     String   @default("")
+
+  @@map("users")
+}
+
+model Session {
+  id        String  @id @default(cuid())
+  token     String  @unique
+  userId    String
+  createdAt String  @default("")
+  expiresAt String
+
+  @@map("sessions")
+}
+
+model Task {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  status      String   @default("todo")
+  priority    String   @default("medium")
+  category    String   @default("study")
+  dueDate     String?
+  dueTime     String?
+  tags        String?
+  order       Int      @default(0)
+  parentId    String?
+  completed   Boolean  @default(false)
+  createdAt   String   @default("")
+  updatedAt   String   @default("")
+
+  @@map("tasks")
+}
+
+model Subject {
+  id          String   @id @default(cuid())
+  name        String
+  color       String   @default("#7c3aed")
+  icon        String?
+  progress    Int      @default(0)
+  createdAt   String   @default("")
+  updatedAt   String   @default("")
+
+  @@map("subjects")
+}
+
+model Topic {
+  id          String   @id @default(cuid())
+  subjectId   String
+  name        String
+  progress    Int      @default(0)
+  notes       String?
+  reviewCount Int      @default(0)
+  nextReview  String?
+  completed   Boolean  @default(false)
+  createdAt   String   @default("")
+  updatedAt   String   @default("")
+
+  @@map("topics")
+}
+
+model StudySession {
+  id          String   @id @default(cuid())
+  subjectId   String?
+  topicId     String?
+  subjectName String?
+  type        String   @default("pomodoro")
+  duration    Int
+  completed   Boolean  @default(false)
+  startedAt   String
+  endedAt     String?
+  createdAt   String   @default("")
+
+  @@map("study_sessions")
+}
+
+model Habit {
+  id          String   @id @default(cuid())
+  name        String
+  icon        String?
+  color       String   @default("#7c3aed")
+  frequency   String   @default("daily")
+  targetCount Int      @default(1)
+  createdAt   String   @default("")
+  updatedAt   String   @default("")
+
+  @@map("habits")
+}
+
+model HabitLog {
+  id        String  @id @default(cuid())
+  habitId   String
+  date      String
+  completed Boolean @default(true)
+  count     Int     @default(1)
+
+  @@map("habit_logs")
+}
+
+model TimeBlock {
+  id        String  @id @default(cuid())
+  title     String
+  startTime String
+  endTime   String
+  category  String  @default("study")
+  date      String
+  taskId    String?
+  completed Boolean @default(false)
+  order     Int     @default(0)
+
+  @@map("time_blocks")
+}
+
+model UserSettings {
+  id                String  @id @default(cuid())
+  name              String  @default("Student")
+  pomodoroWork      Int     @default(25)
+  pomodoroBreak     Int     @default(5)
+  pomodoroLongBreak Int     @default(15)
+  pomodoroRounds    Int     @default(4)
+  dayStartTime      String  @default("06:00")
+  dayEndTime        String  @default("22:00")
+  level             Int     @default(1)
+  xp                Int     @default(0)
+  streak            Int     @default(0)
+
+  @@map("user_settings")
+}
